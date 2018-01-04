@@ -1,4 +1,4 @@
-#Ping+
+# Ping+
 ## A Simplified Network Diagnostic Tool
 
 I am writing Ping+ as my first C# program.
