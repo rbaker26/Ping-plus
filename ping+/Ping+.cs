@@ -5,6 +5,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Threading;
 
+
 using System.Text.RegularExpressions;
 
 namespace ping_
@@ -13,7 +14,8 @@ namespace ping_
     {
         static void Main(string[] args)
         {
-          
+            IpConfig ipw = new IpConfig();
+            PingHandler pinger;
 
             // ping <ip> <size> <count>
             InitConsole();
@@ -44,6 +46,7 @@ namespace ping_
                     goto case 1;
                 case 1:
                     ip = args[0];
+                    pinger = new PingHandler(ip, (uint)size, (uint)count);
                     break;
                 case 0:
                     //Console.WriteLine("Enter an IP address:");
@@ -56,15 +59,12 @@ namespace ping_
                     Console.WriteLine("Error");
                     break;
             }
-         
-            if(ip == "exit" || ip == "EXIT" || ip == "Exit")
+
+            if (ip.ToUpper() == "EXIT") ;
             {
                 System.Environment.Exit(1);
             }
-            if(args.Length != 0)
-            {
-                _ping(ip, size, count);
-            }
+
             
 
 
@@ -76,9 +76,9 @@ namespace ping_
             bool exitFlag;
             do
             {
-                
 
-                ResetPingVals(ref ip, ref size, ref count);
+                
+                //ResetPingVals(ref ip, ref size, ref count);
 
                 Console.WriteLine();
                 Console.Write(">>> ");
@@ -86,7 +86,9 @@ namespace ping_
                 fullCommand = Console.ReadLine();
                 commandAr = fullCommand.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
 
-                if(commandAr.Length != 0 && !(commandAr[0].ToUpper() == "EXIT" || commandAr[0].ToUpper() == "HELP") )
+                if(commandAr.Length != 0 && !(commandAr[0].ToUpper() == "RUN"  || 
+                                              commandAr[0].ToUpper() == "EXIT" || 
+                                              commandAr[0].ToUpper() == "HELP") )
                 {
                     switch (commandAr.Length)
                     {
@@ -111,15 +113,20 @@ namespace ping_
                             break;
                     }
 
-
-                    _ping(ip, size, count);
+                    pinger = new PingHandler(ip, (uint)size, (uint)count);
+                    
                 }
                 else if (commandAr.Length != 0 && commandAr[0].ToUpper() == "HELP")
                 {
                     Console.WriteLine(usage);
         
                 }
-                  
+                else if((commandAr.Length != 0 && commandAr[0].ToUpper() == "RUN"))
+                {
+                    pinger = new PingHandler(); // will run ping tests
+                }
+
+                // this is the exitng logic block.
                 if(commandAr.Length != 0)
                 {
                     exitFlag = (commandAr[0] == "exit" || commandAr[0] == "Exit" || commandAr[0] == "EXIT");
@@ -149,67 +156,7 @@ namespace ping_
 
         }
 
-        static void _ping(string ip, int size, int count)
-        {
-            
-            Ping pingSender = new Ping();
-            PingOptions options = new PingOptions();
-
-            // Use the default Ttl value which is 128,
-            // but change the fragmentation behavior.
-            options.DontFragment = true;
-
-            // Create a buffer of 32 bytes of data to be transmitted.
-            string data = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-            byte[] buffer = Encoding.ASCII.GetBytes(data);
-
-            int timeout = 5000;
-
-            Console.WriteLine("Ping+ " + ip + " with " + size + " byte of data:");
-            for(int i = 0; i < count; i++)
-            {
-                try
-                {
-                    PingReply reply = pingSender.Send(ip, timeout, buffer, options);
-                    if (reply.Status == IPStatus.Success)
-                    {
-                        //Console.WriteLine("Address: {0}", reply.Address.ToString());
-                        //Console.WriteLine("RoundTrip time: {0}", reply.RoundtripTime);
-                        //Console.WriteLine("Time to live: {0}", reply.Options.Ttl);
-                        //Console.WriteLine("Don't fragment: {0}", reply.Options.DontFragment);
-                        //Console.WriteLine("Buffer size: {0}", reply.Buffer.Length);
-                        Console.WriteLine("Reply from " + ip + ": bytes=" + size + " time=" + reply.RoundtripTime + "ms");
-                    }
-                    else if (reply.Status == IPStatus.BadDestination)
-                    {
-                        Console.WriteLine("bad ip");
-                    }
-                    else if (reply.Status == IPStatus.DestinationHostUnreachable)
-                    {
-                        Console.WriteLine("Destination Host Unreachable");
-                    }
-                    else if (reply.Status == IPStatus.TimedOut)
-                    {
-                        Console.WriteLine("Request Timed Out");
-                    }
-                }
-                catch (System.Net.NetworkInformation.PingException pExp)
-                {
-                    Console.WriteLine(pExp.ToString());
-                }
-               
-
-            }
-
-
-        }
-
-        static void ResetPingVals(ref string ip, ref int size, ref int count)
-        {
-            ip = "0.0.0.0";
-            size = 32;
-            count = 4;
-        }
+       
 
         static string title = "\n\n" +
                 "***************************************************************\n" +

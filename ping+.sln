@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ping+", "ping+\ping+.csproj", "{11CCCD55-DB05-4DB2-A5C4-D03124A2CAD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ping+", "ping+\ping+.csproj", "{11CCCD55-DB05-4DB2-A5C4-D03124A2CAD8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AE33A6B1-B995-4DAD-9194-8FAF566F9E6B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
