@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Text;
 
 namespace ping_
 {
@@ -51,7 +52,20 @@ namespace ping_
                     break;
                 }
             }
-            return mac;
+
+            StringBuilder sb = new StringBuilder(mac);
+            // Puts the dashes in the mac address
+            for(int i = mac.Length; i > 0; i--)
+            {
+                if(i != 0 && i % 2 == 0 && i != mac.Length)
+                {
+                    sb.Insert(i, "-");
+                    i--;
+                }
+                
+            }
+
+            return sb.ToString();
         }
         //************************************************************************************
 
@@ -61,6 +75,34 @@ namespace ping_
             return this.mac;
         }
         //************************************************************************************
+
+        //************************************************************************************
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("\nWireless LAN adapter Wi-Fi:\n");
+            sb.Append("\tLocalhost Name:\t\t\t" + getLocalComputerName() + '\n');
+
+            sb.Append("\tIPv4 Address\t\t\t" + localIPs[3] + "\n");
+            sb.Append("\tIPv6 Address\t\t\t" + localIPs[2] + "\n");
+            sb.Append("\tIPv6 Address\t\t\t" + localIPs[5] + "\n");
+            sb.Append("\tTemporary IPv6 Address\t\t" + localIPs[1] + "\n");
+            sb.Append("\tTemporary IPv6 Address\t\t" + localIPs[4] + "\n");
+
+
+            sb.Append("\tLink-Local IPv6 Address:\t" + localIPs[0] + '\n');
+            
+           
+            
+            
+
+            sb.Append("\tWiFi Mac Address:\t\t" + getMac());
+
+            return sb.ToString();
+        }
+        //************************************************************************************
     }
+
 }
 

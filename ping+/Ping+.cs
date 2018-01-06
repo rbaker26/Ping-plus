@@ -14,7 +14,7 @@ namespace ping_
     {
         static void Main(string[] args)
         {
-            IpConfig ipw = new IpConfig();
+            IpConfig ipCf = new IpConfig();
             PingHandler pinger;
 
             // ping <ip> <size> <count>
@@ -39,14 +39,45 @@ namespace ping_
             switch (args.Length)
             {
                 case 3:
-                    count = Int32.Parse(args[2]);
+                    try
+                    {
+                        count = Int32.Parse(args[2]);
+                    }
+                    catch (FormatException)
+                    {
+                        ConsoleColor currentForeground = Console.ForegroundColor;
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Bad [count] Parameter");
+                        Console.ForegroundColor = currentForeground;
+                        goto case 0;
+                    }
                     goto case 2;
                 case 2:
-                    size = Int32.Parse(args[1]);
+                    try
+                    {
+                        size = Int32.Parse(args[1]);
+                    }
+                    catch (FormatException)
+                    {
+                        ConsoleColor currentForeground = Console.ForegroundColor;
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Bad [size] Parameter");
+                        Console.ForegroundColor = currentForeground;
+                        goto case 0;
+                    }
                     goto case 1;
                 case 1:
                     ip = args[0];
+
+                    if(args[0].ToUpper() == "HELP" || args[0].ToUpper() == "-H")
+                    {
+                        Console.WriteLine(helpCmd);
+                        System.Environment.Exit(1);
+                    }
+                    // prints the tests to console
                     pinger = new PingHandler(ip, (uint)size, (uint)count);
+                    Console.WriteLine(ipCf);
+                    //System.Environment.Exit(1);  // idk if i want to exit on a success with command line params yet
                     break;
                 case 0:
                     //Console.WriteLine("Enter an IP address:");
@@ -58,9 +89,11 @@ namespace ping_
                     // todo - make a throw exeption.
                     Console.WriteLine("Error");
                     break;
+                    
+
             }
 
-            if (ip.ToUpper() == "EXIT") ;
+            if (ip.ToUpper() == "EXIT") 
             {
                 System.Environment.Exit(1);
             }
@@ -93,10 +126,33 @@ namespace ping_
                     switch (commandAr.Length)
                     {
                         case 3:
-                            count = Int32.Parse(commandAr[2]);
+                            try
+                            {
+                                count = Int32.Parse(commandAr[2]);
+                            }
+                            catch (FormatException)
+                            {
+                                ConsoleColor currentForeground = Console.ForegroundColor;
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Bad [size] Parameter");
+                                Console.ForegroundColor = currentForeground;
+                                goto case 0;
+                            }
                             goto case 2;
                         case 2:
-                            size = Int32.Parse(commandAr[1]);
+                            try
+                            {
+                                size = Int32.Parse(commandAr[1]);
+                            }
+                            catch(FormatException)
+                            {
+                                ConsoleColor currentForeground = Console.ForegroundColor;
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Bad Parameter");
+                                Console.ForegroundColor = currentForeground;
+                                goto case 0;
+                            }
+                            
                             goto case 1;
                         case 1:
                             ip = commandAr[0];
@@ -114,16 +170,18 @@ namespace ping_
                     }
 
                     pinger = new PingHandler(ip, (uint)size, (uint)count);
-                    
+                    Console.WriteLine(ipCf);
+
                 }
                 else if (commandAr.Length != 0 && commandAr[0].ToUpper() == "HELP")
                 {
-                    Console.WriteLine(usage);
+                    Console.WriteLine(helpInner);
         
                 }
                 else if((commandAr.Length != 0 && commandAr[0].ToUpper() == "RUN"))
                 {
                     pinger = new PingHandler(); // will run ping tests
+                    Console.WriteLine(ipCf);
                 }
 
                 // this is the exitng logic block.
@@ -136,7 +194,8 @@ namespace ping_
                     exitFlag = false;
                 }
 
-
+                count = 4;
+                size = 32;
             } while (!exitFlag);
             
         }
@@ -151,6 +210,8 @@ namespace ping_
             Console.WriteLine(title);
             Console.WriteLine("Ping+ is a simple network diagnostic tool.");
             Console.WriteLine("It will run a series of tests in one run.");
+            Console.WriteLine("Type \"run\" to start testing.");
+
             Console.WriteLine("Type \"help\" for help or \"exit\" to exit");
             Console.WriteLine("***************************************************************");
 
@@ -158,7 +219,7 @@ namespace ping_
 
        
 
-        static string title = "\n\n" +
+        const string title = "\n\n" +
                 "***************************************************************\n" +
                 "*            /$$                                  \n"+
                 "*           |__/                        /$$       \n"+ 
@@ -175,6 +236,25 @@ namespace ping_
 
 
 
-        static string usage = "USAGE: \nPing+ <IP Address> [size] [count]";
+        const string usage = "USAGE: \n\t>>> <IP Address> [size] [count]";
+
+        const string helpCmd = "\n\nOptions:\n\n" +
+                            "Ping+ \t\tRuns Test with default Values.\n\n" +
+                            "Ping+ <ip_address> [size] [count]\n" +
+                                "\t[size] & [count] are optional.\n\n" +
+                            "Ping+ <web_address> [size] [count]\n" +
+                                "\t[size] & [count] are optional.\n\n" +
+                            "Ping+ -h\t\t|Displays Help\n";
+
+        const string helpInner = "\n\nOptions:\n\n" +
+                                 "\texit \tReturns to command line.\n\n" +
+                                 "\trun \tRuns tests will default values.\n\n" +
+                                 "\t<ip_address> [size] [count]\n" +
+                                    "\t[size] & [count] are optional.\n\n" +
+                                "\t<web_address> [size] [count]\n" +
+                                    "\t[size] & [count] are optional.\n\n" +
+                                 "\t-h \t\t|Displays Help\n";
+
+
     }
 }

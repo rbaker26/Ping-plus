@@ -77,31 +77,56 @@ namespace ping_
                         //Console.WriteLine("Time to live: {0}", reply.Options.Ttl);
                         //Console.WriteLine("Don't fragment: {0}", reply.Options.DontFragment);
                         //Console.WriteLine("Buffer size: {0}", reply.Buffer.Length);
+                        ConsoleColor currentForeground = Console.ForegroundColor;
+
+                        Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Reply from " + ip + ": bytes=" + size + " time=" + reply.RoundtripTime + "ms");
+                        Console.ForegroundColor = currentForeground;
                         totalTime += reply.RoundtripTime;
                     }
                     else if (reply.Status == IPStatus.BadDestination)
                     {
+                        ConsoleColor currentForeground = Console.ForegroundColor;
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("bad ip");
+                        Console.ForegroundColor = currentForeground;
+
+                        lostPackets++;
                     }
                     else if (reply.Status == IPStatus.DestinationHostUnreachable)
                     {
+                        ConsoleColor currentForeground = Console.ForegroundColor;
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Destination Host Unreachable");
+                        Console.ForegroundColor = currentForeground;
+                        
                         lostPackets++;
                     }
                     else if (reply.Status == IPStatus.TimedOut)
                     {
+                        ConsoleColor currentForeground = Console.ForegroundColor;
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Request Timed Out");
+                        Console.ForegroundColor = currentForeground;
+                        
                         timeoutCount++;
                     }
                 }
                 catch (System.Net.NetworkInformation.PingException pExp)
                 {
-                    Console.WriteLine(pExp.ToString());
+                    ConsoleColor currentForeground = Console.ForegroundColor;
+
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    //Console.WriteLine(pExp.ToString());
+                    Console.Error.WriteLine("Bad Value");
+                    Console.ForegroundColor = currentForeground;
+                    
                 }
 
 
             }
+            count = COUNT;
+            size = SIZE;
             //*****************************************************************
 
             //*****************************************************************
@@ -114,8 +139,12 @@ namespace ping_
                               ", Received = "        + received + 
                               ", Lost = "            + lost     +
                               " (" + percLoss + "% loss)");
-            Console.WriteLine("Average Time:\t" + (totalTime / count));
+            Console.WriteLine("Average Time:\t" + (totalTime / count) + "ms");
             //*****************************************************************
+
+            // This reset the count and size to the default values.
+            count = COUNT;
+            size  = SIZE;
         }
         //************************************************************************************
 
