@@ -1,6 +1,5 @@
 # Ping+
 [![Github All Releases](https://img.shields.io/github/downloads/rbaker26/Ping-Plus/total.svg)](https://github.com/rbaker26/Ping-plus)
-[![Github All Releases](atom/atom/total.svg)]()
 ## A Simplified Network Diagnostic Tool
 
 I am writing Ping+ as my first C# program. <br>
