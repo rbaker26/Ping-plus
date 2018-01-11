@@ -80,23 +80,27 @@ namespace ping_
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-
             sb.Append("\nWireless LAN adapter Wi-Fi:\n");
+            
             sb.Append("\tLocalhost Name:\t\t\t" + getLocalComputerName() + '\n');
+            try
+            {
+                sb.Append("\tIPv4 Address\t\t\t" + localIPs[3] + "\n");
+                sb.Append("\tIPv6 Address\t\t\t" + localIPs[2] + "\n");
+                sb.Append("\tIPv6 Address\t\t\t" + localIPs[5] + "\n");
+                sb.Append("\tTemporary IPv6 Address\t\t" + localIPs[1] + "\n");
+                sb.Append("\tTemporary IPv6 Address\t\t" + localIPs[4] + "\n");
 
-            sb.Append("\tIPv4 Address\t\t\t" + localIPs[3] + "\n");
-            sb.Append("\tIPv6 Address\t\t\t" + localIPs[2] + "\n");
-            sb.Append("\tIPv6 Address\t\t\t" + localIPs[5] + "\n");
-            sb.Append("\tTemporary IPv6 Address\t\t" + localIPs[1] + "\n");
-            sb.Append("\tTemporary IPv6 Address\t\t" + localIPs[4] + "\n");
 
-
-            sb.Append("\tLink-Local IPv6 Address:\t" + localIPs[0] + '\n');
+                sb.Append("\tLink-Local IPv6 Address:\t" + localIPs[0] + '\n');
+            }
+            catch(IndexOutOfRangeException)
+            {
+                sb.Clear();
+                sb.Append("\nWireless LAN adapter Wi-Fi:\n");
+                sb.Append("\tWifi not connected!\n");
+            }
             
-           
-            
-            
-
             sb.Append("\tWiFi Mac Address:\t\t" + getMac());
 
             return sb.ToString();
