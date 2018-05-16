@@ -9,7 +9,11 @@ namespace ping_
     {
         //************************************************************************************
         private string localComputerName;
-        private IPAddress[] localIPs;
+        private IPAddress[] localIPs; // currently this is wifi
+        private IPAddress[] eth0;
+        private IPAddress[] eth1;
+        private IPAddress[] wifi0;
+        private IPAddress[] wifi1;
         private string mac;
         //************************************************************************************
 
@@ -44,7 +48,7 @@ namespace ping_
             {
                 if(nic.NetworkInterfaceType != NetworkInterfaceType.Wireless80211)
                 {
-                    continue;
+                    continue; 
                 }
                 if(nic.OperationalStatus == OperationalStatus.Up)
                 {
