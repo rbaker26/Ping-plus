@@ -8,7 +8,7 @@ public class ipConfig
 
     public ipConfig()
 	{
-        localComputerName = Dns.GetHostName();
+        localComputerName = Dns.GetHostName(); 
         localIPs = Dns.GetHostAddresses(Dns.GetHostName);
         
     }
